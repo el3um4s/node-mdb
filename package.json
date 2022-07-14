@@ -1,10 +1,11 @@
 {
-  "name": "@el3um4s/typescript-npm-package-starter",
-  "version": "0.0.11",
-  "description": "Typescript NPM Package Starter",
+  "name": "@el3um4s/node-mdb",
+  "version": "0.0.1",
+  "description": "A Node.js javascript client implementing the ADODB protocol on windows.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "prova": "node lib/prova.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest --config jestconfig.json",
@@ -19,15 +20,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/el3um4s/typescript-npm-package-starter.git"
+    "url": "git+https://github.com/el3um4s/node-mdb.git"
   },
   "files": [
     "lib/**/*"
   ],
   "keywords": [
-    "typescript",
-    "npm",
-    "template",
+    "vbs",
+    "mdb",
+    "node",
+    "msaccess",
+    "ms-access",
+    "database",
     "ts"
   ],
   "author": "Samuele C. De Tomasi",
@@ -43,12 +47,12 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/el3um4s/typescript-npm-package-starter/issues"
+    "url": "https://github.com/el3um4s/node-mdb/issues"
   },
-  "homepage": "https://github.com/el3um4s/typescript-npm-package-starter#readme",
+  "homepage": "https://github.com/el3um4s/node-mdb#readme",
   "devDependencies": {
-    "@types/jest": "^28.1.4",
-    "@types/node": "^18.0.3",
+    "@types/jest": "^28.1.5",
+    "@types/node": "^18.0.4",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "ansi-regex": ">=6.0.1",
@@ -58,8 +62,11 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "jest": "^28.1.2",
-    "ts-jest": "^28.0.5",
+    "jest": "^28.1.3",
+    "ts-jest": "^28.0.6",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@el3um4s/run-vbs": "^1.0.1"
   }
 }
