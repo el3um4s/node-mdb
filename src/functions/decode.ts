@@ -1,8 +1,9 @@
-import { charCorrispondencesWin } from "./charCorrispondencesWin";
+// import { charCorrispondencesWin } from "./charCorrispondencesWin";
+import { charCorrispondencesAccess } from "./charCorrispondencesAccess";
 
 const replaceChars = async (text: string) => {
   let textReplaced = text;
-  charCorrispondencesWin.forEach((c) => {
+  charCorrispondencesAccess.forEach((c) => {
     textReplaced = textReplaced.replace(c.win, c.buffer);
   });
   return textReplaced;
