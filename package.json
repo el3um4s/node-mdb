@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "prova": "node lib/prova.js",
-    "charDecode": "node lib/functions/charDecode.js",
+    "charDecode": "node lib/functions/charCreateListCorrispondences.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest --config jestconfig.json",

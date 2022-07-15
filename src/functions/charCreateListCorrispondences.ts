@@ -1,5 +1,9 @@
 import { runVbsBuffer } from "@el3um4s/run-vbs";
 
+import { charList } from "./charList";
+
+import { decode } from "./decode";
+
 const charFromVBS = async (char: string) => {
   const vbs = `Wscript.Echo "${char}"`;
   const result = await runVbsBuffer({ vbs });
@@ -12,6 +16,16 @@ const charFromVBS = async (char: string) => {
     .filter((x) => x != "0d" && x != "0a")
     .join("");
   return a;
+};
+
+const stringFromVBS = async (str: string) => {
+  const win = await charFromVBS(str);
+  const stringW = Buffer.from(win, "hex");
+  console.log(`${str} -> ${win} -> ${stringW}`);
+
+  const prova = await decode("4369616f204d6f6e646fb6f8c7ff");
+  console.log(prova);
+  return win;
 };
 
 const charFromBuffer = (char: string) => {
@@ -41,6 +55,39 @@ const showConversion = async (char: string) => {
   return { char: c, win, buffer };
 };
 
+const getCorrispondence = async (char: string) => {
+  const c = char[0];
+  const win = await charFromVBS(c);
+  const buffer = charFromBuffer(c);
+  return { char: c, win, buffer };
+};
+
+const createListCorrispondences = async () => {
+  const list = await Promise.all(charList.map(getCorrispondence));
+  return list;
+};
+
+const createCorrispondenceWinToBuffer = async () => {
+  const list: { [key: string]: string } = {};
+  for (const char of charList) {
+    const win = await charFromVBS(char);
+    const buffer = charFromBuffer(char);
+    list[win] = buffer;
+  }
+  return list;
+};
+
+const test = async () => {
+  console.log("start");
+  const list = await createListCorrispondences();
+  console.log("end");
+  console.log(list);
+  return list;
+};
+
+// test();
 const args = process.argv.slice(2);
 
-showConversion(args[0]);
+// showConversion(args[0]);
+
+stringFromVBS(args[0]);
