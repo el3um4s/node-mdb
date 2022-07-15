@@ -6,6 +6,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "prova": "node lib/prova.js",
+    "charDecode": "node lib/functions/charDecode.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest --config jestconfig.json",
@@ -67,6 +68,6 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@el3um4s/run-vbs": "^1.0.1"
+    "@el3um4s/run-vbs": "^1.1.0"
   }
 }
