@@ -4,7 +4,7 @@ import { charCorrispondencesAccess } from "./charCorrispondencesAccess";
 const replaceChars = async (text: string) => {
   let textReplaced = text;
   charCorrispondencesAccess.forEach((c) => {
-    textReplaced = textReplaced.replace(c.win, c.buffer);
+    textReplaced = textReplaced.replaceAll(c.win, c.buffer);
   });
   return textReplaced;
 
@@ -22,6 +22,6 @@ const replaceChars = async (text: string) => {
 
 export const decode = async (text: string): Promise<string> => {
   const textReplaced = await replaceChars(text);
-  const result = Buffer.from(textReplaced, "hex");
+  const result = Buffer.from(textReplaced.replaceAll(" ", ""), "hex");
   return result.toString("utf8");
 };

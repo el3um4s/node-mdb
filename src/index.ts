@@ -12,7 +12,7 @@ const charFromBuffer = async (b: string[]) => {
   const str: { type: number; data: number[] } = JSON.parse(
     JSON.stringify(b[0])
   );
-  const result = str.data.map((x) => x.toString(16).padStart(2, "0")).join("");
+  const result = str.data.map((x) => x.toString(16).padStart(2, "0")).join(" ");
   return result;
 };
 
@@ -101,4 +101,52 @@ const prova4 = async (): Promise<string> => {
   return resultDecoded;
 };
 
-export { ciao, prova, prova2, prova3, prova4 };
+const listaCaratteri = async (): Promise<string> => {
+  const vbs = api_query_all_values;
+
+  const file = path.resolve("./src/__tests__/chars.mdb");
+  console.log(file);
+  const result = await runVbsBuffer({
+    vbs,
+    args: [file, "lista", "JSON"],
+  });
+
+  const stringW = await charFromBuffer(result);
+  console.log(stringW);
+  const resultDecoded = await decode(stringW);
+  console.log(resultDecoded);
+
+  fs.writeFileSync("lista.json", resultDecoded);
+
+  return resultDecoded;
+};
+
+const listaCaratteriCSV = async (): Promise<string> => {
+  const vbs = api_query_all_values;
+
+  const file = path.resolve("./src/__tests__/chars.mdb");
+  console.log(file);
+  const result = await runVbsBuffer({
+    vbs,
+    args: [file, "lista", "CSV"],
+  });
+
+  const stringW = await charFromBuffer(result);
+  console.log(stringW);
+  const resultDecoded = await decode(stringW);
+  console.log(resultDecoded);
+
+  fs.writeFileSync("lista.csv", resultDecoded);
+
+  return resultDecoded;
+};
+
+export {
+  ciao,
+  prova,
+  prova2,
+  prova3,
+  prova4,
+  listaCaratteri,
+  listaCaratteriCSV,
+};
