@@ -9,14 +9,6 @@ import path = require("path");
 
 import fs = require("fs");
 
-const charFromBuffer = async (b: string[]) => {
-  const str: { type: number; data: number[] } = JSON.parse(
-    JSON.stringify(b[0])
-  );
-  const result = str.data.map((x) => x.toString(16).padStart(2, "0")).join(" ");
-  return result;
-};
-
 const ciao = async () => {
   const vbs = `Wscript.Echo "Ciao Mondo"`;
   const result = await runVbs({ vbs });
@@ -27,16 +19,10 @@ const prova = async (): Promise<string> => {
   const vbs = api_schema;
 
   const file = path.resolve("./src/__tests__/adodb.mdb");
-  console.log(file);
   const result = await runVbsBuffer({
     vbs,
     args: [file, "JSON"],
   });
-
-  // const stringW = await charFromBuffer(result);
-  // console.log(stringW);
-  // const resultDecoded = await decode(stringW);
-  // console.log(resultDecoded);
 
   const resultDecoded = decodeVBSBuffer(result);
 
@@ -48,16 +34,10 @@ const prova2 = async (): Promise<string> => {
   const vbs = api_schema;
 
   const file = path.resolve("./src/__tests__/chars.mdb");
-  console.log(file);
   const result = await runVbsBuffer({
     vbs,
     args: [file, "JSON"],
   });
-
-  // const stringW = await charFromBuffer(result);
-  // console.log(stringW);
-  // const resultDecoded = await decode(stringW);
-  // console.log(resultDecoded);
 
   const resultDecoded = decodeVBSBuffer(result);
 
@@ -70,16 +50,10 @@ const prova3 = async (): Promise<string> => {
   const vbs = api_query_all_values;
 
   const file = path.resolve("./src/__tests__/chars.mdb");
-  console.log(file);
   const result = await runVbsBuffer({
     vbs,
     args: [file, "aà", "JSON"],
   });
-
-  // const stringW = await charFromBuffer(result);
-  // console.log(stringW);
-  // const resultDecoded = await decode(stringW);
-  // console.log(resultDecoded);
 
   const resultDecoded = decodeVBSBuffer(result);
 
@@ -92,16 +66,10 @@ const prova4 = async (): Promise<string> => {
   const vbs = api_query_all_values;
 
   const file = path.resolve("./src/__tests__/chars.mdb");
-  console.log(file);
   const result = await runVbsBuffer({
     vbs,
     args: [file, "°", "JSON"],
   });
-
-  // const stringW = await charFromBuffer(result);
-  // console.log(stringW);
-  // const resultDecoded = await decode(stringW);
-  // console.log(resultDecoded);
 
   const resultDecoded = decodeVBSBuffer(result);
 
@@ -114,16 +82,10 @@ const listaCaratteri = async (): Promise<string> => {
   const vbs = api_query_all_values;
 
   const file = path.resolve("./src/__tests__/chars.mdb");
-  console.log(file);
   const result = await runVbsBuffer({
     vbs,
     args: [file, "lista", "JSON"],
   });
-
-  // const stringW = await charFromBuffer(result);
-  // console.log(stringW);
-  // const resultDecoded = await decode(stringW);
-  // console.log(resultDecoded);
 
   const resultDecoded = decodeVBSBuffer(result);
 
@@ -136,16 +98,10 @@ const listaCaratteriCSV = async (): Promise<string> => {
   const vbs = api_query_all_values;
 
   const file = path.resolve("./src/__tests__/chars.mdb");
-  console.log(file);
   const result = await runVbsBuffer({
     vbs,
     args: [file, "lista", "CSV"],
   });
-
-  // const stringW = await charFromBuffer(result);
-  // console.log(stringW);
-  // const resultDecoded = await decode(stringW);
-  // console.log(resultDecoded);
 
   const resultDecoded = decodeVBSBuffer(result);
 

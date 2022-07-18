@@ -1,16 +1,15 @@
 // c:\Windows\SysWOW64\cscript.exe .\api_query_sql.vbs adodb.mdb "SELECT id, [first name] FROM [Users];"  [JSON/CSV]
 
-export const api_sql = `
-Function OpenConnection(sConnectionString)
-    Set objConnection = CreateObject("ADODB.Connection")
-    OpenConnection = objConnection.Open(sConnectionString)
-End Function
+import { openConnection } from "./helpers/OpenConnection";
+import { closeRecordset } from "./helpers/CloseRecordset";
+import { generateConnectionString } from "./helpers/GenerateConnectionString";
+import { closeConnection } from "./helpers/CloseConnection";
 
-Sub CloseRecordset(objRecordset)
-     If objRecordset.State = 1 Then
-        objRecordset.Close
-    End If
-End Sub
+export const api_sql = `
+${openConnection}
+${closeRecordset}
+${generateConnectionString}
+${closeConnection}
 
 Function SQL_CSV(objConnection, sQuery)
     Set objRecordSet = CreateObject("ADODB.Recordset")
@@ -72,37 +71,6 @@ Function SQL_JSON(objConnection, sQuery)
     CloseRecordset(objRecordset)
     
     SQL_JSON = result
-End Function
-
-Sub CloseConnection(objConnection)
-    objConnection.Close
-End Sub
-
-Function GenerateConnectionString(nameDatabase)
-    GenerateConnectionString = "NONE"
-    Dim ext
-    ext = DatabaseExstension(nameDatabase)
-    
-    If ext = "MDB" then
-        GenerateConnectionString = Replace("Provider=Microsoft.Jet.OLEDB.4.0;Data Source='NAMEDATABASE';","NAMEDATABASE",nameDatabase) 
-    End If
-
-    If ext = "ACCDB" then
-        GenerateConnectionString = Replace("Provider=Microsoft.ACE.OLEDB.12.0;Data Source='NAMEDATABASE';Persist Security Info=False;","NAMEDATABASE",nameDatabase)
-    End If
-
-End Function
-
-Function DatabaseExstension(nameDatabase)
-    dim ext
-    ext = "NONE"
-    If Right(UCase(nameDatabase), 4) = ".MDB" then
-        ext = "MDB"
-    End If
-    If Right(UCase(nameDatabase), 6) = ".ACCDB" then
-        ext = "ACCDB"
-    End If
-    DatabaseExstension = ext
 End Function
 
 Dim nameDatabase
