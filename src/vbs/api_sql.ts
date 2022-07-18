@@ -1,6 +1,6 @@
-// c:\Windows\SysWOW64\cscript.exe .\api_query_all_values.vbs adodb.mdb users [JSON/CSV]
+// c:\Windows\SysWOW64\cscript.exe .\api_query_sql.vbs adodb.mdb "SELECT id, [first name] FROM [Users];"  [JSON/CSV]
 
-export const api_query_all_values = `
+export const api_sql = `
 Function OpenConnection(sConnectionString)
     Set objConnection = CreateObject("ADODB.Connection")
     OpenConnection = objConnection.Open(sConnectionString)
@@ -11,72 +11,6 @@ Sub CloseRecordset(objRecordset)
         objRecordset.Close
     End If
 End Sub
-
-Function GetAllValue_CSV(objConnection, nameTable)
-    Set objRecordSet = CreateObject("ADODB.Recordset")
-    Dim sQuery
-    sQuery = "SELECT * FROM " & "[" & nameTable & "]"
-    Set objRecordset = objConnection.Execute(sQuery)
-    strOutput = ""
-
-    If IsObject( objRecordset ) Then
-        If objRecordset.State = 1 Then
-            Do While Not objRecordset.EOF
-                ' Create a header line with the column names and data types
-                strHeader = ""
-                For i = 0 To objRecordset.Fields.Count - 1
-                    strHeader = strHeader & ",""" & objRecordset.Fields.Item(i).Name & """"
-                Next
-                strHeader = Mid(strHeader, 2)
-                ' List the fields of the current record in comma delimited format
-                strResult = ""
-                For i = 0 To objRecordset.Fields.Count - 1
-                    strResult = strResult & ",""" & objRecordset.Fields.Item(i).Value & """"
-                Next
-                ' Add the current record to the output string
-                strOutput = strOutput & Mid( strResult, 2 ) & vbCrLf
-                objRecordset.MoveNext
-            Loop
-        End If
-    End If
-
-    CloseRecordset(objRecordset)
-    dim result
-    result = strHeader & vbCrLf & strOutput & vbCrLf
-    GetAllValue_CSV = result
-End Function
-
-Function GetAllValue_JSON(objConnection, nameTable)
-    Set objRecordSet = CreateObject("ADODB.Recordset")
-    Dim sQuery
-    sQuery = "SELECT * FROM " & "[" & nameTable & "]"
-    Set objRecordset = objConnection.Execute(sQuery)
-    strOutput = ""
-
-    dim result
-    result =  "{""result"":["
-    If IsObject( objRecordset ) Then
-        If objRecordset.State = 1 Then
-
-            Do Until objRecordset.EOF
-                result = result & "{"
-                For i = 0 To objRecordset.Fields.Count - 1
-                    result = result & """" & objRecordset.Fields.Item(i).Name & """: " & """" & objRecordset.Fields.Item(i).Value & ""","
-                Next
-                result = Left(result, Len(result) - 1)
-                result = result & "},"
-                objRecordset.MoveNext
-            Loop
-            result = Left(result, Len(result) - 1)
-       End If
-    End If
-
-    result = result & "]}"
-    CloseRecordset(objRecordset)
-    
-    GetAllValue_JSON = result
-End Function
-
 
 Function SQL_CSV(objConnection, sQuery)
     Set objRecordSet = CreateObject("ADODB.Recordset")
@@ -111,6 +45,7 @@ Function SQL_CSV(objConnection, sQuery)
 End Function
 
 Function SQL_JSON(objConnection, sQuery)
+
     Set objRecordSet = CreateObject("ADODB.Recordset")
     Set objRecordset = objConnection.Execute(sQuery)
     strOutput = ""
@@ -173,8 +108,8 @@ End Function
 Dim nameDatabase
 nameDatabase = WScript.Arguments.Item(0)
 
-Dim nameTable
-nameTable = WScript.Arguments.Item(1)
+Dim sQuery
+sQuery = WScript.Arguments.Item(1)
 
 Dim format
 format = "JSON"  'CSV - JSON
@@ -192,9 +127,10 @@ objConnection.Open(sConnectionString)
 dim schema
 
 If UCase(format) = "CSV" then
-    schema = GetAllValue_CSV(objConnection, nameTable)
+    schema = SQL_CSV(objConnection, sQuery)
 Else
-    schema = GetAllValue_JSON(objConnection, nameTable)
+    schema = SQL_JSON(objConnection, sQuery)
 End if
 
-Wscript.Echo schema`;
+Wscript.Echo schema
+`;

@@ -1,10 +1,11 @@
 import { runVbs, runVbsBuffer } from "@el3um4s/run-vbs";
-import path = require("path");
+import { decodeVBSBuffer } from "@el3um4s/decode-mdb-strange-chars";
 
 import { api_schema } from "./vbs/api_schema";
 import { api_query_all_values } from "./vbs/api_query_all_values";
+import { api_sql } from "./vbs/api_sql";
 
-import { decode } from "./functions/decode";
+import path = require("path");
 
 import fs = require("fs");
 
@@ -32,10 +33,12 @@ const prova = async (): Promise<string> => {
     args: [file, "JSON"],
   });
 
-  const stringW = await charFromBuffer(result);
-  console.log(stringW);
-  const resultDecoded = await decode(stringW);
-  console.log(resultDecoded);
+  // const stringW = await charFromBuffer(result);
+  // console.log(stringW);
+  // const resultDecoded = await decode(stringW);
+  // console.log(resultDecoded);
+
+  const resultDecoded = decodeVBSBuffer(result);
 
   fs.writeFileSync("prova.json", resultDecoded);
   return resultDecoded;
@@ -51,10 +54,12 @@ const prova2 = async (): Promise<string> => {
     args: [file, "JSON"],
   });
 
-  const stringW = await charFromBuffer(result);
-  console.log(stringW);
-  const resultDecoded = await decode(stringW);
-  console.log(resultDecoded);
+  // const stringW = await charFromBuffer(result);
+  // console.log(stringW);
+  // const resultDecoded = await decode(stringW);
+  // console.log(resultDecoded);
+
+  const resultDecoded = decodeVBSBuffer(result);
 
   fs.writeFileSync("prova-2.json", resultDecoded);
 
@@ -71,10 +76,12 @@ const prova3 = async (): Promise<string> => {
     args: [file, "aà", "JSON"],
   });
 
-  const stringW = await charFromBuffer(result);
-  console.log(stringW);
-  const resultDecoded = await decode(stringW);
-  console.log(resultDecoded);
+  // const stringW = await charFromBuffer(result);
+  // console.log(stringW);
+  // const resultDecoded = await decode(stringW);
+  // console.log(resultDecoded);
+
+  const resultDecoded = decodeVBSBuffer(result);
 
   fs.writeFileSync("prova-3.json", resultDecoded);
 
@@ -91,10 +98,12 @@ const prova4 = async (): Promise<string> => {
     args: [file, "°", "JSON"],
   });
 
-  const stringW = await charFromBuffer(result);
-  console.log(stringW);
-  const resultDecoded = await decode(stringW);
-  console.log(resultDecoded);
+  // const stringW = await charFromBuffer(result);
+  // console.log(stringW);
+  // const resultDecoded = await decode(stringW);
+  // console.log(resultDecoded);
+
+  const resultDecoded = decodeVBSBuffer(result);
 
   fs.writeFileSync("prova-4.json", resultDecoded);
 
@@ -111,10 +120,12 @@ const listaCaratteri = async (): Promise<string> => {
     args: [file, "lista", "JSON"],
   });
 
-  const stringW = await charFromBuffer(result);
-  console.log(stringW);
-  const resultDecoded = await decode(stringW);
-  console.log(resultDecoded);
+  // const stringW = await charFromBuffer(result);
+  // console.log(stringW);
+  // const resultDecoded = await decode(stringW);
+  // console.log(resultDecoded);
+
+  const resultDecoded = decodeVBSBuffer(result);
 
   fs.writeFileSync("lista.json", resultDecoded);
 
@@ -131,10 +142,12 @@ const listaCaratteriCSV = async (): Promise<string> => {
     args: [file, "lista", "CSV"],
   });
 
-  const stringW = await charFromBuffer(result);
-  console.log(stringW);
-  const resultDecoded = await decode(stringW);
-  console.log(resultDecoded);
+  // const stringW = await charFromBuffer(result);
+  // console.log(stringW);
+  // const resultDecoded = await decode(stringW);
+  // console.log(resultDecoded);
+
+  const resultDecoded = decodeVBSBuffer(result);
 
   fs.writeFileSync("lista.csv", resultDecoded);
 

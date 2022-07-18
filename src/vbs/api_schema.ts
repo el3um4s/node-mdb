@@ -1,8 +1,3 @@
-// import { db_OpenConnection } from "./db_OpenConnection";
-// import { schema_GetSchemaTables_All } from "./schema_GetSchemaTables_All";
-// import { db_CloseConnection } from "./db_CloseConnection";
-// import { db_GenerateConnectionString } from "./db_GenerateConnectionString";
-
 //  c:\Windows\SysWOW64\cscript.exe .\api_schema.vbs adodb.mdb [JSON/CSV]
 
 export const api_schema = `
