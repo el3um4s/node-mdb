@@ -63,7 +63,7 @@ describe("API: tables", () => {
   test("table.list_toFile", async () => {
     const result = await table.list_toFile({
       database,
-      file: "./src/__tests__/list_toFile.txt",
+      file: "./src/__tests__/exportedToFiles/list_toFile.txt",
     });
     expect(result).toBe(true);
   });
