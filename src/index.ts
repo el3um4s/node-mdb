@@ -5,18 +5,13 @@ import { api_schema } from "./vbs/api_schema";
 import { api_query_all_values } from "./vbs/api_query_all_values";
 import { api_sql } from "./vbs/api_sql";
 
-import {
-  tablesList,
-  tablesListAll,
-  tablesListSystem,
-  tableSchema,
-} from "./api/tables";
+import { table } from "./api/tables";
 
 import path = require("path");
 
 import fs = require("fs");
 
-export { tablesList, tablesListAll, tablesListSystem, tableSchema };
+export { table };
 // export const tablesAll = async (data: { database: string }): Promise<any> => {
 //   const vbs = api_schema;
 //   const file = path.resolve(data.database);

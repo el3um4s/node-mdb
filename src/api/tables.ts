@@ -1,4 +1,5 @@
 import path = require("path");
+import * as fs from "fs/promises";
 
 import { runVbsBuffer } from "@el3um4s/run-vbs";
 import { decodeVBSBuffer } from "@el3um4s/decode-mdb-strange-chars";
@@ -17,9 +18,7 @@ interface Columns {
   DESC: string;
 }
 
-export const tablesList = async (data: {
-  database: string;
-}): Promise<string[]> => {
+const list = async (data: { database: string }): Promise<string[]> => {
   const vbs = api_schema;
   const file = path.resolve(data.database);
   const result = await runVbsBuffer({
@@ -35,9 +34,21 @@ export const tablesList = async (data: {
   return onlyTables;
 };
 
-export const tablesListAll = async (data: {
+const list_toFile = async (data: {
   database: string;
-}): Promise<string[]> => {
+  file: string;
+}): Promise<boolean> => {
+  const result = await list({ database: data.database });
+  const file = path.resolve(data.file);
+  try {
+    await fs.writeFile(file, JSON.stringify(result));
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+export const all = async (data: { database: string }): Promise<string[]> => {
   const vbs = api_schema;
   const file = path.resolve(data.database);
   const result = await runVbsBuffer({
@@ -58,9 +69,7 @@ export const tablesListAll = async (data: {
   return onlyTables;
 };
 
-export const tablesListSystem = async (data: {
-  database: string;
-}): Promise<string[]> => {
+export const system = async (data: { database: string }): Promise<string[]> => {
   const vbs = api_schema;
   const file = path.resolve(data.database);
   const result = await runVbsBuffer({
@@ -81,7 +90,7 @@ export const tablesListSystem = async (data: {
   return onlyTables;
 };
 
-export const tableSchema = async (data: {
+export const schema = async (data: {
   database: string;
   table: string;
 }): Promise<Columns[]> => {
@@ -98,3 +107,5 @@ export const tableSchema = async (data: {
 
   return obj.result;
 };
+
+export const table = { list, all, system, schema, list_toFile };
