@@ -1,6 +1,8 @@
 import path = require("path");
 import * as fs from "fs/promises";
 
+import { toTryAsync } from "@el3um4s/to-try";
+
 import { runVbsBuffer } from "@el3um4s/run-vbs";
 import { decodeVBSBuffer } from "@el3um4s/decode-mdb-strange-chars";
 
@@ -39,13 +41,17 @@ const list_toFile = async (data: {
   file: string;
 }): Promise<boolean> => {
   const result = await list({ database: data.database });
+
+  const r = result.join("\n");
+
   const file = path.resolve(data.file);
-  try {
-    await fs.writeFile(file, JSON.stringify(result));
-    return true;
-  } catch (err) {
+
+  const [, err2] = await toTryAsync(() => fs.writeFile(file, r));
+
+  if (err2) {
     return false;
   }
+  return true;
 };
 
 export const all = async (data: { database: string }): Promise<string[]> => {

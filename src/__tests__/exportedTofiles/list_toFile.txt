@@ -1,1 +1,3 @@
-["Attività","To Do","Users"]
+Attività
+To Do
+Users

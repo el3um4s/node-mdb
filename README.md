@@ -1,106 +1,54 @@
-# Typescript NPM Package Starter
-My template for creating npm packages using typescript.
+# Node MDB
 
-- TS to JS
-- Testing via Jest, includes coverage
-- ESLint
-- Ignore files to ensure minimal code is stored/shipped
+> A Node.js javascript client implementing the ADODB protocol on windows.
 
-NPM link: [@el3um4s/typescript-npm-package-starter](https://www.npmjs.com/package/@el3um4s/typescript-npm-package-starter)
+NPM link: [@el3um4s/node-mdb](https://www.npmjs.com/package/@el3um4s/node-mdb)
 
-### Getting Started
+This project arises from the need to access legacy databases. Read tables from MDB files. Performs simple queries on MDB files. It can be considered as an updated version of [node-adodb](https://www.npmjs.com/package/@el3um4s/node-adodb). For \*nix systems you can use [Node MdbTools](https://www.npmjs.com/package/@el3um4s/mdbtools).
 
-To create a new project based on this template using degit:
-
-```bash
-npx degit el3um4s/typescript-npm-package-starter
-```
-
-Then install the dependencies with
-
-```bash
-npm install
-```
-
-Now update the name field in package.json with your desired package name. Then update the homepage field in package.json. And finally add your code.
-
-### Build the package
-
-Run
-
-```bash
-npm run build
-```
-
-### Test the package
-
-You can test the code with [Jest](https://jestjs.io/)
-
-```bash
-npm test
-```
-
-You can find the test coverage in `coverage/lcov-report/index.html`.
-
-### Check dependencies
-
-You can check and upgrade dependencies to the latest versions, ignoring specified versions. with [npm-check-updates](https://www.npmjs.com/package/npm-check-updates):
-
-```bash
-npm run check-updates
-```
-
-You can also use `npm run check-updates:minor` to update only patch and minor.
-
-Instead `npm run check-updates:patch` only updates patch.
-
-### Publish
-
-First commit the changes to GitHub. Then login to your [NPM](https://www.npmjs.com) account (If you don’t have an account you can do so on [https://www.npmjs.com/signup](https://www.npmjs.com/signup))
-
-```bash
-npm login
-```
-
-Then run publish:
-
-```bash
-npm publish
-```
-
-If you're using a scoped name use:
-
-```bash
-npm publish --access public
-```
-
-### Bumping a new version
-
-To update the package use:
-
-```bash
-npm version patch
-```
-
-and then
-
-```bash
-npm publish
-```
+> The library need system support `Microsoft.Jet.OLEDB.4.0` or `Microsoft.ACE.OLEDB.12.0`, `Windows XP SP2` above support `Microsoft.Jet.OLEDB.4.0` by default, Others need to install support!
+>
+> Recommended use `Microsoft.ACE.OLEDB.12.0`, download: [Microsoft.ACE.OLEDB.12.0](https://www.microsoft.com/en-us/download/details.aspx?id=13255)
 
 ### Install and use the package
 
 To use the package in a project:
 
 ```bash
-npm i @el3um4s/typescript-npm-package-starter
+npm i @el3um4s/node-mdb
 ```
 
 and then in a file:
 
 ```ts
-import { ciao } from "@el3um4s/typescript-npm-package-starter";
+import { table } from "@el3um4s/node-mdb";
 
-const b = ciao("mondo");
-console.log(b); // Ciao Mondo
+const database = "./src/__tests__/test.mdb";
+
+const result = await table.list({ database });
+console.log(result);
+//  ["Attività", "Users", "To Do"]
+
+const schema = await table.schema({ database, table: "to do" });
+console.log(schema);
+// [
+//   { DESC: "Integer", NAME: "ord", TYPE: "3" },
+//   { DESC: "VarWChar", NAME: "to do", TYPE: "202" },
+// ]
 ```
+
+### API: table
+
+- `table.list({ database:string }): Promise<string[]>`: list all tables in the database (excluding system tables)
+- `table.all({ database:string} ): Promise<string[]>`: list all tables in the database (including system tables)
+- `table.system({ database:string} ): Promise<string[]>`: list all system tables in the database
+- `table.schema({ database, table }): Promise<Columns[]>`: get the schema of the table. Return an array of objects with the following properties:
+  - `NAME`: name of the column
+  - `TYPE`: type of the column
+  - `DESC`: description of the column
+- `table.list_toFiles({ database, file }): Promise<boolean>`: list all tables in the database (excluding system tables) and save them in file
+
+**To Do**:
+
+- `table.read({ database, table })`: read the table
+- `table.query({ database, table, query }): Promise<any[]>`: query the table. `query` is a string with the query to execute.
