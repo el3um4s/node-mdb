@@ -68,7 +68,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@el3um4s/decode-mdb-strange-chars": "^1.0.0",
+    "@el3um4s/decode-mdb-strange-chars": "^1.0.1",
     "@el3um4s/run-vbs": "^1.1.1"
   }
 }

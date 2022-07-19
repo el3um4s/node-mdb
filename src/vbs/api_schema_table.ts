@@ -5,15 +5,15 @@ import { closeRecordset } from "./helpers/CloseRecordset";
 import { generateConnectionString } from "./helpers/GenerateConnectionString";
 import { closeConnection } from "./helpers/CloseConnection";
 
-import { getAllValue } from "./base/GetAllValue";
+import { getSchemaOneTable } from "./base/GetSchemaOneTable";
 
-export const api_query_all_values = `
+export const api_schema_table = `
 ${openConnection}
 ${closeRecordset}
 ${generateConnectionString}
 ${closeConnection}
 
-${getAllValue}
+${getSchemaOneTable}
 
 Dim nameDatabase
 nameDatabase = WScript.Arguments.Item(0)
@@ -37,9 +37,9 @@ objConnection.Open(sConnectionString)
 dim schema
 
 If UCase(format) = "CSV" then
-    schema = GetAllValue_CSV(objConnection, nameTable)
+    schema = GetSchemaTable_One_CSV(objConnection, nameTable)
 Else
-    schema = GetAllValue_JSON(objConnection, nameTable)
+    schema = GetSchemaTable_One_JSON(objConnection, nameTable)
 End if
 
 Wscript.Echo schema`;
