@@ -3,16 +3,12 @@ import * as fs from "fs";
 
 import { table } from "../index";
 
-const source = path.resolve("src/__tests__/provadidb.mdb");
-console.log(source);
-
-const mdbPath = path.resolve("src/__tests__/examples/provadidb.txt");
-console.log(mdbPath);
-const mdb = fs.readFileSync(mdbPath);
-console.log(mdb);
-fs.writeFileSync(source, mdb);
-
 const database = "./src/__tests__/test.mdb";
+
+fs.writeFileSync(
+  path.resolve("src/__tests__/test.mdb"),
+  fs.readFileSync(path.resolve("src/__tests__/examples/test.mdb"))
+);
 
 describe("API: tables", () => {
   test("table.all", async () => {
