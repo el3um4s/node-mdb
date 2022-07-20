@@ -46,7 +46,7 @@ console.log(schema);
   - `NAME`: name of the column
   - `TYPE`: type of the column
   - `DESC`: description of the column
-- `table.list_toFiles({ database, file }): Promise<boolean>`: list all tables in the database (excluding system tables) and save them in file
+- `table.listToFile({ database, file }): Promise<boolean>`: list all tables in the database (excluding system tables) and save them in file
 
 **To Do**:
 
