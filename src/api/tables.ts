@@ -54,7 +54,7 @@ const list_toFile = async (data: {
   return true;
 };
 
-export const all = async (data: { database: string }): Promise<string[]> => {
+const all = async (data: { database: string }): Promise<string[]> => {
   const vbs = api_schema;
   const file = path.resolve(data.database);
   const result = await runVbsBuffer({
@@ -75,7 +75,7 @@ export const all = async (data: { database: string }): Promise<string[]> => {
   return onlyTables;
 };
 
-export const system = async (data: { database: string }): Promise<string[]> => {
+const system = async (data: { database: string }): Promise<string[]> => {
   const vbs = api_schema;
   const file = path.resolve(data.database);
   const result = await runVbsBuffer({
@@ -96,7 +96,7 @@ export const system = async (data: { database: string }): Promise<string[]> => {
   return onlyTables;
 };
 
-export const schema = async (data: {
+const schema = async (data: {
   database: string;
   table: string;
 }): Promise<Columns[]> => {
