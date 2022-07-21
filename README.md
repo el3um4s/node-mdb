@@ -42,13 +42,17 @@ console.log(schema);
 - `table.list({ database:string }): Promise<string[]>`: list all tables in the database (excluding system tables)
 - `table.all({ database:string} ): Promise<string[]>`: list all tables in the database (including system tables)
 - `table.system({ database:string} ): Promise<string[]>`: list all system tables in the database
-- `table.schema({ database, table }): Promise<Columns[]>`: get the schema of the table. Return an array of objects with the following properties:
+- `table.schema({ database:string, table:string }): Promise<Columns[]>`: get the schema of the table. Return an array of objects with the following properties:
   - `NAME`: name of the column
   - `TYPE`: type of the column
   - `DESC`: description of the column
-- `table.listToFile({ database, file }): Promise<boolean>`: list all tables in the database (excluding system tables) and save them in file
+- `table.read({ database:string, table:string }): Promise<GenericObject[]>`: read the table like an array of objects.
+- `table.select({ database:string, table:string, columns?:string[], where?:string }): Promise<GenericObject[]>`: read the table like an array of objects.
+- `table.count({ database:string, table:string }): Promise<number>`: count the number of rows in the table.
+- `table.listToFile({ database:string, file:string }): Promise<boolean>`: list all tables in the database (excluding system tables) and save them in file
+- `table.exportToFileJSON({ database:string, table:string, file:string }): Promise<boolean>`: read the table like an array of objects and save it in file
+- `table.exportToFileCSV({ database:string, table:string, file:string }): Promise<boolean>`: read the table and export to a CSV file
 
 **To Do**:
 
-- `table.read({ database, table })`: read the table
-- `table.query({ database, table, query }): Promise<any[]>`: query the table. `query` is a string with the query to execute.
+- `table.query({ database:string, table:string, query:string }): Promise<GenericObject[]>`: query the table. `query` is a string with the query to execute.

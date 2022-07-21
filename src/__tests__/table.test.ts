@@ -15,7 +15,6 @@ fs.writeFileSync(
 describe("API: tables", () => {
   test("table.all", async () => {
     const result = await table.all({ database });
-    expect(result).not.toBeInstanceOf(Error);
 
     const expected = [
       "Attività",
@@ -37,7 +36,6 @@ describe("API: tables", () => {
 
   test("table.list", async () => {
     const result = await table.list({ database });
-    expect(result).not.toBeInstanceOf(Error);
 
     const expected = ["Attività", "Users", "To Do"];
     const resultSorted = result instanceof Error ? [] : result.sort();
@@ -46,7 +44,6 @@ describe("API: tables", () => {
 
   test("table.system", async () => {
     const result = await table.system({ database });
-    expect(result).not.toBeInstanceOf(Error);
 
     const expected = [
       "MSysACEs",
@@ -65,7 +62,6 @@ describe("API: tables", () => {
 
   test("table.schema", async () => {
     const result = await table.schema({ database, table: "to do" });
-    expect(result).not.toBeInstanceOf(Error);
 
     const expected = [
       { DESC: "Integer", NAME: "ord", TYPE: "3" },
@@ -77,7 +73,6 @@ describe("API: tables", () => {
 
   test("table.read", async () => {
     const result = await table.read({ database, table: "Users" });
-    expect(result).not.toBeInstanceOf(Error);
 
     const expected = [
       {
@@ -96,6 +91,92 @@ describe("API: tables", () => {
     expect(result[2].userName).toBe("Re Giorgio 1°");
     expect(result.sort()).toEqual(expected.sort());
   });
+
+  test("table.select userName and userAge", async () => {
+    const result = await table.select({
+      database,
+      table: "Users",
+      columns: ["userName", "userAge"],
+    });
+
+    const expected = [
+      {
+        userName: "Mario Rossi",
+        userAge: "25",
+      },
+      { userName: "Sara Carrà", userAge: "31" },
+      { userName: "Re Giorgio 1°", userAge: "100" },
+    ];
+
+    expect(result.length).toBe(3);
+    expect(result[0].userName).toBe(expected[0].userName);
+    expect(result[1].userAge).toBe(expected[1].userAge);
+    expect(result[2].userName).toBe("Re Giorgio 1°");
+    expect(result.sort()).toEqual(expected.sort());
+  });
+
+  test("table.select userName, userAge where userAge < 100", async () => {
+    const result = await table.select({
+      database,
+      table: "Users",
+      columns: ["userName", "userAge"],
+      where: "[userAge] < 100",
+    });
+
+    const expected = [
+      {
+        userName: "Mario Rossi",
+        userAge: "25",
+      },
+      { userName: "Sara Carrà", userAge: "31" },
+    ];
+
+    expect(result.length).toBe(2);
+    expect(result[0].userName).toBe(expected[0].userName);
+    expect(result[1].userAge).toBe(expected[1].userAge);
+    expect(result.sort()).toEqual(expected.sort());
+  });
+
+  test("table.select all", async () => {
+    const result = await table.select({ database, table: "Users" });
+
+    const expected = [
+      {
+        userName: "Mario Rossi",
+        userAge: "25",
+        mail: "mariorossi1999@test.com",
+      },
+      { userName: "Sara Carrà", userAge: "31", mail: "sara.carrà@test.com" },
+      { userName: "Re Giorgio 1°", userAge: "100", mail: "rg1@test.com" },
+    ];
+
+    expect(result.length).toBe(3);
+    expect(result[0].userName).toBe(expected[0].userName);
+    expect(result[1].userAge).toBe(expected[1].userAge);
+    expect(result[1].mail).toBe("sara.carrà@test.com");
+    expect(result[2].userName).toBe("Re Giorgio 1°");
+    expect(result.sort()).toEqual(expected.sort());
+  });
+
+  test("table.count", async () => {
+    const result = await table.count({ database, table: "Users" });
+
+    expect(result).toBe(3);
+  });
+
+  // test("table.read with filter", async () => {
+  //   const result = await table.read({
+  //     database,
+  //     table: "Users",
+  //     filter: { userAge: "25" },
+  //   });
+
+  //   const expected = [
+  //     {
+  //       userName: "Mario Rossi",
+  //       userAge: "25",
+  //       mail: "
+  // });
 
   test("table.listToFile", async () => {
     const result = await table.listToFile({
@@ -185,6 +266,24 @@ describe("API: tables ERRORS", () => {
   test("table.read ERROR: TABLE WRONG", async () => {
     const [result, error] = await toTryAsync(() =>
       table.read({ database, table: "NONE" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
+  });
+
+  test("table.count ERROR: DATABASE WRONG", async () => {
+    const [result, error] = await toTryAsync(() =>
+      table.count({ database: "NONE", table: "Users" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
+  });
+
+  test("table.count ERROR: TABLE WRONG", async () => {
+    const [result, error] = await toTryAsync(() =>
+      table.count({ database, table: "NONE" })
     );
 
     expect(result).toBeFalsy();
