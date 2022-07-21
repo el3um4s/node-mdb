@@ -21,46 +21,38 @@ interface Columns {
 
 type GenericObject = Record<string, unknown>;
 
-const list = async (data: { database: string }): Promise<string[] | Error> => {
-  try {
-    const vbs = api_schema;
-    const file = path.resolve(data.database);
-    const result = await runVbsBuffer({
-      vbs,
-      args: [file, "JSON"],
-    });
+const list = async (data: { database: string }): Promise<string[]> => {
+  const vbs = api_schema;
+  const file = path.resolve(data.database);
+  const result = await runVbsBuffer({
+    vbs,
+    args: [file, "JSON"],
+  });
 
-    const resultDecoded = decodeVBSBuffer(result);
-    const obj: { result: TableName[] } = JSON.parse(resultDecoded);
-    const onlyTables = obj.result
-      .filter((x) => x.TABLE_TYPE.toLowerCase() === "table")
-      .map((x) => x.TABLE_NAME);
-    return onlyTables;
-  } catch (error) {
-    return Object.assign(new Error(`table.list error`), error);
-  }
+  const resultDecoded = decodeVBSBuffer(result);
+  const obj: { result: TableName[] } = JSON.parse(resultDecoded);
+  const onlyTables = obj.result
+    .filter((x) => x.TABLE_TYPE.toLowerCase() === "table")
+    .map((x) => x.TABLE_NAME);
+  return onlyTables;
 };
 
 const listToFile = async (data: {
   database: string;
   file: string;
-}): Promise<true | Error> => {
-  try {
-    const result = await list({ database: data.database });
+}): Promise<boolean> => {
+  const result = await list({ database: data.database });
 
-    if (result instanceof Error) {
-      throw result;
-    }
-    const r = result.join("\n");
-
-    const file = path.resolve(data.file);
-
-    await fs.writeFile(file, r);
-
-    return true;
-  } catch (error) {
-    return Object.assign(new Error(`table.listToFile error`), error);
+  if (result instanceof Error) {
+    throw result;
   }
+  const r = result.join("\n");
+
+  const file = path.resolve(data.file);
+
+  await fs.writeFile(file, r);
+
+  return true;
 };
 
 const all = async (data: { database: string }): Promise<string[]> => {
@@ -144,42 +136,34 @@ const exportToFileJSON = async (data: {
   database: string;
   table: string;
   file: string;
-}): Promise<true | Error> => {
-  try {
-    const result = await read({ database: data.database, table: data.table });
+}): Promise<boolean> => {
+  const result = await read({ database: data.database, table: data.table });
 
-    const file = path.resolve(data.file);
+  const file = path.resolve(data.file);
 
-    await fs.writeFile(file, JSON.stringify(result));
+  await fs.writeFile(file, JSON.stringify(result));
 
-    return true;
-  } catch (error) {
-    return Object.assign(new Error(`table.exportToFileJSON error`), error);
-  }
+  return true;
 };
 
 const exportToFileCSV = async (data: {
   database: string;
   table: string;
   file: string;
-}): Promise<true | Error> => {
-  try {
-    const vbs = api_query_all_values;
-    const mdb = path.resolve(data.database);
-    const result = await runVbsBuffer({
-      vbs,
-      args: [mdb, `"${data.table}"`, "CSV"],
-    });
+}): Promise<boolean> => {
+  const vbs = api_query_all_values;
+  const mdb = path.resolve(data.database);
+  const result = await runVbsBuffer({
+    vbs,
+    args: [mdb, `"${data.table}"`, "CSV"],
+  });
 
-    const resultDecoded = decodeVBSBuffer(result).trim();
+  const resultDecoded = decodeVBSBuffer(result).trim();
 
-    const file = path.resolve(data.file);
-    await fs.writeFile(file, resultDecoded);
+  const file = path.resolve(data.file);
+  await fs.writeFile(file, resultDecoded);
 
-    return true;
-  } catch (error) {
-    return Object.assign(new Error(`table.exportToFileCSV error`), error);
-  }
+  return true;
 };
 
 export const table = {

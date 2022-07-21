@@ -1,6 +1,8 @@
 import path from "path";
 import * as fs from "fs";
 
+import { toTryAsync } from "@el3um4s/to-try";
+
 import { table } from "../index";
 
 const database = "./src/__tests__/test.mdb";
@@ -127,81 +129,129 @@ describe("API: tables", () => {
 
 describe("API: tables ERRORS", () => {
   test("table.all ERROR: DATABASE WRONG", async () => {
-    const result = await table.all({ database: "NONE" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.all({ database: "NONE" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.list ERROR: DATABASE WRONG", async () => {
-    const result = await table.list({ database: "NONE" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.list({ database: "NONE" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.system ERROR: DATABASE WRONG", async () => {
-    const result = await table.system({ database: "NONE" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.system({ database: "NONE" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.schema ERROR: DATABASE WRONG", async () => {
-    const result = await table.schema({ database: "NONE", table: "to do" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.schema({ database: "NONE", table: "to do" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.schema ERROR: TABLE WRONG", async () => {
-    const result = await table.schema({ database, table: "NONE" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.schema({ database, table: "NONE" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.read ERROR: DATABASE WRONG", async () => {
-    const result = await table.read({ database: "NONE", table: "Users" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.read({ database: "NONE", table: "Users" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.read ERROR: TABLE WRONG", async () => {
-    const result = await table.read({ database, table: "NONE" });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.read({ database, table: "NONE" })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.listToFile ERROR: DATABASE WRONG", async () => {
-    const result = await table.listToFile({
-      database: "NONE",
-      file: "./src/__tests__/exportedToFiles/listToFile.txt",
-    });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.listToFile({
+        database: "NONE",
+        file: "./src/__tests__/exportedToFiles/ERROR_listToFile.txt",
+      })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.exportToFileJSON ERROR: DATABASE WRONG", async () => {
-    const result = await table.exportToFileJSON({
-      database: "NONE",
-      file: "./src/__tests__/exportedToFiles/exportToFileJSON.json",
-      table: "Users",
-    });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.exportToFileJSON({
+        database: "NONE",
+        file: "./src/__tests__/exportedToFiles/ERROR_exportToFileJSON.json",
+        table: "Users",
+      })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.exportToFileCSV ERROR: DATABASE WRONG", async () => {
-    const result = await table.exportToFileCSV({
-      database: "NONE",
-      file: "./src/__tests__/exportedToFiles/exportToFileCSV.csv",
-      table: "Attività",
-    });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.exportToFileCSV({
+        database: "NONE",
+        file: "./src/__tests__/exportedToFiles/ERROR_exportToFileCSV.csv",
+        table: "Attività",
+      })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.exportToFileJSON ERROR: TABLE WRONG", async () => {
-    const result = await table.exportToFileJSON({
-      database,
-      file: "./src/__tests__/exportedToFiles/exportToFileJSON.json",
-      table: "NONE",
-    });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.exportToFileJSON({
+        database,
+        file: "./src/__tests__/exportedToFiles/ERROR_TABLE_exportToFileJSON.json",
+        table: "NONE",
+      })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 
   test("table.exportToFileCSV ERROR: TABLE WRONG", async () => {
-    const result = await table.exportToFileCSV({
-      database,
-      file: "./src/__tests__/exportedToFiles/exportToFileCSV.csv",
-      table: "NONE",
-    });
-    expect(result).toBeInstanceOf(Error);
+    const [result, error] = await toTryAsync(() =>
+      table.exportToFileCSV({
+        database,
+        file: "./src/__tests__/exportedToFiles/ERROR_TABLE_exportToFileCSV.csv",
+        table: "NONE",
+      })
+    );
+
+    expect(result).toBeFalsy();
+    expect(error).toBeTruthy();
   });
 });
