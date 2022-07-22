@@ -1,5 +1,6 @@
 import path from "path";
 import * as fs from "fs";
+import * as fsPromises from "fs/promises";
 
 import { toTryAsync } from "@el3um4s/to-try";
 
@@ -415,7 +416,13 @@ describe("API DERIVED: table", () => {
   });
 
   test("table.exportAllTablesToFileJSON with events", async () => {
-    const folder = "./src/__tests__/exportedToFiles/exportAllTablesToFileJSON";
+    const folder =
+      "./src/__tests__/exportedToFiles/exportAllTablesToFileJSON_WithEvents";
+
+    await toTryAsync(async () => {
+      await fsPromises.access(path.resolve(folder));
+      await fsPromises.rm(path.resolve(folder));
+    });
 
     const checkEvents = {
       onStart: false,
