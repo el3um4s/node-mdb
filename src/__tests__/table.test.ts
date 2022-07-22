@@ -5,6 +5,8 @@ import { toTryAsync } from "@el3um4s/to-try";
 
 import { table } from "../index";
 
+import { TableContents } from "../interfaces/Interfaces";
+
 const database = "./src/__tests__/test.mdb";
 
 fs.writeFileSync(
@@ -12,7 +14,7 @@ fs.writeFileSync(
   fs.readFileSync(path.resolve("src/__tests__/examples/test.mdb"))
 );
 
-describe("API: tables", () => {
+describe("API: table", () => {
   test("table.all", async () => {
     const result = await table.all({ database });
 
@@ -208,7 +210,7 @@ describe("API: tables", () => {
   });
 });
 
-describe("API: tables ERRORS", () => {
+describe("API: table ERRORS", () => {
   test("table.all ERROR: DATABASE WRONG", async () => {
     const [result, error] = await toTryAsync(() =>
       table.all({ database: "NONE" })
@@ -352,5 +354,56 @@ describe("API: tables ERRORS", () => {
 
     expect(result).toBeFalsy();
     expect(error).toBeTruthy();
+  });
+});
+
+describe("API DERIVED: table", () => {
+  test("table.readAllTables", async () => {
+    const result = await table.readAllTables({ database });
+
+    expect(result).toBeTruthy();
+    expect(result.length).toBe(3);
+    const activity = result.filter((t) => t.TABLE_NAME === "Attività")[0];
+
+    expect(activity).toBeTruthy();
+    expect(activity.TABLE_CONTENT.length).toBe(3);
+  });
+
+  test("table.readAllTables with events", async () => {
+    const checkEvents = {
+      onStart: false,
+      onEnd: false,
+      onTableRead: new Array<string>(),
+    };
+    const events = {
+      onStart: () => {
+        checkEvents.onStart = true;
+        // console.log(`STARTED, ${l.length} tables to read`);
+      },
+      onEnd: () => {
+        checkEvents.onEnd = true;
+        // console.log("ENDED");
+      },
+      onTableRead: (t: TableContents) => {
+        checkEvents.onTableRead.push(t.TABLE_NAME);
+        // console.log(`TABLE ${t.TABLE_NAME} READ WITH ${t.TABLE_CONTENT.length} ROWS`);
+      },
+    };
+    const result = await table.readAllTables({ database, events });
+
+    expect(result).toBeTruthy();
+    expect(result.length).toBe(3);
+    const activity = result.filter((t) => t.TABLE_NAME === "Attività")[0];
+
+    expect(activity).toBeTruthy();
+    expect(activity.TABLE_CONTENT.length).toBe(3);
+
+    expect(checkEvents.onStart).toBeTruthy();
+    expect(checkEvents.onEnd).toBeTruthy();
+    expect(checkEvents.onTableRead.length).toBe(3);
+    expect(checkEvents.onTableRead).toContain("Attività");
+    expect(checkEvents.onTableRead.sort()).toEqual(
+      ["Attività", "Users", "To Do"].sort()
+    );
   });
 });

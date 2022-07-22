@@ -9,18 +9,13 @@ import { api_schema_table } from "../vbs/api_schema_table";
 import { api_query_all_values } from "../vbs/api_query_all_values";
 import { api_sql } from "../vbs/api_sql";
 
-interface TableName {
-  TABLE_NAME: string;
-  TABLE_TYPE: "TABLE" | "SYSTEM TABLE" | "ACCESS TABLE" | "VIEW";
-}
-
-interface Columns {
-  NAME: string;
-  TYPE: number;
-  DESC: string;
-}
-
-type GenericObject = Record<string, unknown>;
+import {
+  TableName,
+  Columns,
+  GenericObject,
+  TableContents,
+  ReadEvents,
+} from "../interfaces/Interfaces";
 
 const list = async (data: { database: string }): Promise<string[]> => {
   const vbs = api_schema;
@@ -210,6 +205,41 @@ const select = async (data: {
   return obj.result;
 };
 
+const readAllTables = async (data: {
+  database: string;
+  events?: ReadEvents;
+}): Promise<TableContents[]> => {
+  const { database, events } = data;
+  const tables = await list({ database });
+
+  if (events?.onStart) {
+    events.onStart(tables);
+  }
+
+  const result = await Promise.all(
+    tables.map(async (table) => {
+      const rows = await count({ database, table });
+      const content = await read({ database, table });
+      const result = {
+        TABLE_NAME: table,
+        TABLE_CONTENT: content,
+        TABLE_ROWS: rows,
+      };
+
+      if (events?.onTableRead) {
+        events?.onTableRead(result);
+      }
+      return result;
+    })
+  );
+
+  if (events?.onEnd) {
+    events.onEnd();
+  }
+
+  return result;
+};
+
 export const table = {
   list,
   all,
@@ -221,4 +251,5 @@ export const table = {
   exportToFileCSV,
   count,
   select,
+  readAllTables,
 };
