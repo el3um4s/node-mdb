@@ -234,10 +234,55 @@ const readAllTables = async (data: {
   );
 
   if (events?.onEnd) {
-    events.onEnd();
+    events.onEnd(result);
   }
 
   return result;
+};
+
+const exportAllTablesToFileJSON = async (data: {
+  database: string;
+  folder: string;
+  events?: ReadEvents;
+}): Promise<boolean> => {
+  const { database, folder, events } = data;
+  const tables = await list({ database });
+
+  if (events?.onStart) {
+    events.onStart(tables);
+  }
+
+  try {
+    await fs.access(path.resolve(folder));
+  } catch {
+    await fs.mkdir(path.resolve(folder));
+  }
+
+  const result = await Promise.all(
+    tables.map(async (table) => {
+      const rows = await count({ database, table });
+      const content = await read({ database, table });
+      const result = {
+        TABLE_NAME: table,
+        TABLE_CONTENT: content,
+        TABLE_ROWS: rows,
+      };
+
+      const fileJSON = path.resolve(folder, `${table}.json`);
+      await fs.writeFile(fileJSON, JSON.stringify(result.TABLE_CONTENT));
+
+      if (events?.onTableRead) {
+        events?.onTableRead(result);
+      }
+      return result;
+    })
+  );
+
+  if (events?.onEnd) {
+    events.onEnd(result);
+  }
+
+  return true;
 };
 
 export const table = {
@@ -252,4 +297,5 @@ export const table = {
   count,
   select,
   readAllTables,
+  exportAllTablesToFileJSON,
 };

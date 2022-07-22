@@ -406,4 +406,56 @@ describe("API DERIVED: table", () => {
       ["Attività", "Users", "To Do"].sort()
     );
   });
+
+  test("table.exportAllTablesToFileJSON", async () => {
+    const folder = "./src/__tests__/exportedToFiles/exportAllTablesToFileJSON";
+    const result = await table.exportAllTablesToFileJSON({ database, folder });
+
+    expect(result).toBeTruthy();
+  });
+
+  test("table.exportAllTablesToFileJSON with events", async () => {
+    const folder = "./src/__tests__/exportedToFiles/exportAllTablesToFileJSON";
+
+    const checkEvents = {
+      onStart: false,
+      onEnd: false,
+      onTableRead: new Array<string>(),
+    };
+
+    const afterRead: TableContents[] = [];
+    const events = {
+      onStart: () => {
+        checkEvents.onStart = true;
+      },
+      onEnd: (r: TableContents[]) => {
+        checkEvents.onEnd = true;
+        afterRead.push(...r);
+      },
+      onTableRead: (t: TableContents) => {
+        checkEvents.onTableRead.push(t.TABLE_NAME);
+      },
+    };
+    const resultExport = await table.exportAllTablesToFileJSON({
+      database,
+      events,
+      folder,
+    });
+
+    expect(resultExport).toBeTruthy();
+
+    expect(afterRead.length).toBe(3);
+    const activity = afterRead.filter((t) => t.TABLE_NAME === "Attività")[0];
+
+    expect(activity).toBeTruthy();
+    expect(activity.TABLE_CONTENT.length).toBe(3);
+
+    expect(checkEvents.onStart).toBeTruthy();
+    expect(checkEvents.onEnd).toBeTruthy();
+    expect(checkEvents.onTableRead.length).toBe(3);
+    expect(checkEvents.onTableRead).toContain("Attività");
+    expect(checkEvents.onTableRead.sort()).toEqual(
+      ["Attività", "Users", "To Do"].sort()
+    );
+  });
 });

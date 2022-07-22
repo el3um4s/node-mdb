@@ -20,5 +20,5 @@ export interface TableContents {
 export interface ReadEvents {
   onTableRead?: (data: TableContents) => void;
   onStart?: (tables: string[]) => void;
-  onEnd?: () => void;
+  onEnd?: (result: TableContents[]) => void;
 }
