@@ -43,16 +43,22 @@ console.log(schema);
 - `table.all({ database:string} ): Promise<string[]>`: list all tables in the database (including system tables)
 - `table.system({ database:string} ): Promise<string[]>`: list all system tables in the database
 - `table.schema({ database:string, table:string }): Promise<Columns[]>`: get the schema of the table. Return an array of objects with the following properties:
-  - `NAME`: name of the column
-  - `TYPE`: type of the column
-  - `DESC`: description of the column
+  - `NAME: string`: name of the column
+  - `TYPE: number`: type of the column
+  - `DESC: string`: description of the column
 - `table.read({ database:string, table:string }): Promise<GenericObject[]>`: read the table like an array of objects.
+- `table.readAllTables({ database:string, events?: ReadEvents }): Promise<TableContents[]>`: read all tables like an array of objects type `TableContents` with the following properties:
+  - `TABLE_NAME: string`: name of the table
+  - `TABLE_CONTENT: GenericObject[]`: content of the table
+  - `TABLE_ROWS: number`: rows of the table
+    You can intercept the events by passing an object with the following properties:
+  - `onStart: (tables: string[]) => void`: called when the reading starts
+  - `onEnd: (result: TableContents[]) => void`: called when the reading ends
+  - `onTableRead: (data: TableContents) => void`: called when the table is read
 - `table.select({ database:string, table:string, columns?:string[], where?:string }): Promise<GenericObject[]>`: read the table like an array of objects.
 - `table.count({ database:string, table:string }): Promise<number>`: count the number of rows in the table.
 - `table.listToFile({ database:string, file:string }): Promise<boolean>`: list all tables in the database (excluding system tables) and save them in file
 - `table.exportToFileJSON({ database:string, table:string, file:string }): Promise<boolean>`: read the table like an array of objects and save it in file
 - `table.exportToFileCSV({ database:string, table:string, file:string }): Promise<boolean>`: read the table and export to a CSV file
-
-**To Do**:
-
-- `table.query({ database:string, table:string, query:string }): Promise<GenericObject[]>`: query the table. `query` is a string with the query to execute.
+- `table.exportAllTablesToFileJSON({ database:string, folder: string, events?: ReadEvents }): Promise<TableContents[]>`: read all tables like an array of objects and save it in file
+- `table.exportAllTablesToFileCSV({ database:string, folder: string, events?: ReadEvents }): Promise<TableContents[]>`: read all tables like an array of objects and export to a CSV file
