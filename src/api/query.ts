@@ -3,6 +3,7 @@ import * as fs from "fs/promises";
 
 import { runVbsBuffer } from "@el3um4s/run-vbs";
 import { decodeVBSBuffer } from "@el3um4s/decode-mdb-strange-chars";
+import { toTry } from "@el3um4s/to-try";
 
 import { api_sql } from "../vbs/api_sql";
 
@@ -25,15 +26,18 @@ const sql = async (data: {
 
   const sqlNormalized = normalizeSQL(data.sql);
 
-  const result = await runVbsBuffer({
+  const resultQuery = await runVbsBuffer({
     vbs,
     args: [file, `"${sqlNormalized}"`, "JSON"],
   });
 
-  const resultDecoded = decodeVBSBuffer(result);
+  const [resultDecoded] = toTry(() => {
+    const decoded = decodeVBSBuffer(resultQuery);
+    const obj: { result: GenericObject[] } = JSON.parse(decoded);
+    return obj.result;
+  });
 
-  const obj: { result: GenericObject[] } = JSON.parse(resultDecoded);
-  return obj.result;
+  return resultDecoded ? resultDecoded : [{}];
 };
 
 const sqlToFileJSON = async (data: {

@@ -62,3 +62,9 @@ console.log(schema);
 - `table.exportToFileCSV({ database:string, table:string, file:string }): Promise<boolean>`: read the table and export to a CSV file
 - `table.exportAllTablesToFileJSON({ database:string, folder: string, events?: ReadEvents }): Promise<TableContents[]>`: read all tables like an array of objects and save it in file
 - `table.exportAllTablesToFileCSV({ database:string, folder: string, events?: ReadEvents }): Promise<TableContents[]>`: read all tables like an array of objects and export to a CSV file
+
+### API: query
+
+- `query.sql({ database:string, sql:string }): Promise<GenericObject[]>`: execute a SQL query and return an array of objects.
+- `query.sqlToFileJSON({ database:string, sql:string, file:string }): Promise<boolean>`: execute a SQL query and save the result in file
+- `query.sqlToFileCSV({ database:string, sql:string, file:string }): Promise<boolean>`: execute a SQL query and and export the result to a CSV file

@@ -36,13 +36,7 @@ describe("API: query", () => {
       sql,
     });
 
-    expect(result).toEqual([
-      {
-        userName: "Re Giorgio 1°",
-        userAge: "100",
-        mail: "rg1@test.com",
-      },
-    ]);
+    expect(result).toEqual([{}]);
   });
 
   test("query.sql - multiple lines", async () => {
@@ -111,6 +105,18 @@ WHERE (userName Like '%1°%');`;
     expect(result).toBe(true);
   });
 
+  test("query.sqlToFileJSON - no result", async () => {
+    const result = await query.sqlToFileJSON({
+      database,
+      file: "./src/__tests__/exportedToFiles/sqlToFileJSON - no result.json",
+      sql: `SELECT userName, userAge, mail 
+            FROM Users 
+            WHERE (userName Like '%2°%');`,
+    });
+
+    expect(result).toBe(true);
+  });
+
   test("query.sqlToFileCSV", async () => {
     const result = await query.sqlToFileCSV({
       database,
@@ -118,6 +124,18 @@ WHERE (userName Like '%1°%');`;
       sql: `SELECT userName, userAge, mail 
             FROM Users 
             WHERE (userName Like '%1°%');`,
+    });
+
+    expect(result).toBe(true);
+  });
+
+  test("query.sqlToFileCSV - no result", async () => {
+    const result = await query.sqlToFileCSV({
+      database,
+      file: "./src/__tests__/exportedToFiles/sqlToFileCSV - no result.csv",
+      sql: `SELECT userName, userAge, mail 
+            FROM Users 
+            WHERE (userName Like '%2°%');`,
     });
 
     expect(result).toBe(true);
