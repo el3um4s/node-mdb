@@ -1,8 +1,6 @@
 import path from "path";
 import * as fs from "fs";
 
-import { toTry, toTryAsync } from "@el3um4s/to-try";
-
 import { query } from "../index";
 
 const database = "./src/__tests__/test.mdb";
