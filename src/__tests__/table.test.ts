@@ -171,7 +171,7 @@ describe("API: table", () => {
       database,
       file: "./src/__tests__/exportedToFiles/listToFile.txt",
     });
-    expect(result).not.toBeInstanceOf(Error);
+
     expect(result).toBe(true);
   });
 
@@ -181,7 +181,7 @@ describe("API: table", () => {
       file: "./src/__tests__/exportedToFiles/exportToFileJSON.json",
       table: "Users",
     });
-    expect(result).not.toBeInstanceOf(Error);
+
     expect(result).toBe(true);
   });
 
@@ -191,7 +191,7 @@ describe("API: table", () => {
       file: "./src/__tests__/exportedToFiles/exportToFileCSV.csv",
       table: "Attività",
     });
-    expect(result).not.toBeInstanceOf(Error);
+
     expect(result).toBe(true);
   });
 });

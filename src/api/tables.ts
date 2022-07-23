@@ -188,7 +188,13 @@ const select = async (data: {
   const listColumns = data.columns
     ? data.columns.map((x) => `[${x}]`).join(",")
     : "*";
-  const where = data.where ? ` WHERE ${data.where}` : "";
+
+  const where = data.where
+    ? ` WHERE ${data.where
+        .replaceAll("\r\n", "\n")
+        .replaceAll("\n", " ")
+        .replaceAll('"', "'")}`
+    : "";
 
   const result = await runVbsBuffer({
     vbs,
