@@ -285,6 +285,60 @@ const exportAllTablesToFileJSON = async (data: {
   return true;
 };
 
+const exportAllTablesToFileCSV = async (data: {
+  database: string;
+  folder: string;
+  events?: ReadEvents;
+}): Promise<boolean> => {
+  const { database, folder, events } = data;
+  const tables = await list({ database });
+
+  if (events?.onStart) {
+    events.onStart(tables);
+  }
+
+  try {
+    await fs.access(path.resolve(folder));
+  } catch {
+    await fs.mkdir(path.resolve(folder));
+  }
+
+  const returnResult = events?.onTableRead || events?.onEnd;
+
+  const result = await Promise.all(
+    tables.map(async (table) => {
+      const file = path.resolve(folder, `${table}.csv`);
+      await exportToFileCSV({ database, table, file });
+
+      if (returnResult) {
+        const rows = await count({ database, table });
+        const content = await read({ database, table });
+        const result = {
+          TABLE_NAME: table,
+          TABLE_CONTENT: content,
+          TABLE_ROWS: rows,
+        };
+
+        if (events?.onTableRead) {
+          events?.onTableRead(result);
+        }
+        return result;
+      }
+      return {
+        TABLE_NAME: table,
+        TABLE_CONTENT: [],
+        TABLE_ROWS: 0,
+      };
+    })
+  );
+
+  if (returnResult && events?.onEnd) {
+    events.onEnd(result);
+  }
+
+  return true;
+};
+
 export const table = {
   list,
   all,
@@ -298,4 +352,5 @@ export const table = {
   select,
   readAllTables,
   exportAllTablesToFileJSON,
+  exportAllTablesToFileCSV,
 };
