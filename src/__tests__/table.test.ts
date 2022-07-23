@@ -1,8 +1,7 @@
 import path from "path";
 import * as fs from "fs";
-import * as fsPromises from "fs/promises";
 
-import { toTryAsync } from "@el3um4s/to-try";
+import { toTry, toTryAsync } from "@el3um4s/to-try";
 
 import { table } from "../index";
 
@@ -166,20 +165,6 @@ describe("API: table", () => {
 
     expect(result).toBe(3);
   });
-
-  // test("table.read with filter", async () => {
-  //   const result = await table.read({
-  //     database,
-  //     table: "Users",
-  //     filter: { userAge: "25" },
-  //   });
-
-  //   const expected = [
-  //     {
-  //       userName: "Mario Rossi",
-  //       userAge: "25",
-  //       mail: "
-  // });
 
   test("table.listToFile", async () => {
     const result = await table.listToFile({
@@ -419,10 +404,7 @@ describe("API DERIVED: table", () => {
     const folder =
       "./src/__tests__/exportedToFiles/exportAllTablesToFileJSON_WithEvents";
 
-    await toTryAsync(async () => {
-      await fsPromises.access(path.resolve(folder));
-      await fsPromises.rm(path.resolve(folder));
-    });
+    toTry(() => fs.rmSync(folder, { recursive: true }));
 
     const checkEvents = {
       onStart: false,
