@@ -1,6 +1,6 @@
 {
   "name": "@el3um4s/node-mdb",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Node.js javascript client implementing the ADODB protocol on windows.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
